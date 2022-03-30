@@ -14,9 +14,9 @@ Build Instructions:
 R#### <number of seats to be reserved>
 e.g. R0009 6
 ```
-3) With Java 8+ installed, compile MovieTheaterSeatingAssignment.java with the following command:
+3) With Java 8+ installed, compile MovieTheaterSeatingAssignment.java and MovieTheaterSeats.java with the following command:
 ```
-javac MovieTheaterSeatingAssignment.java
+javac MovieTheaterSeatingAssignment.java MovieTheaterSeats.java
 ```
 4) Create a seating assignment by running a command of the format:
 ```
