@@ -89,9 +89,9 @@ public class MovieTheaterSeatingAssignment {
             output.close();
             input.close();
 
-            for (int[] a : seats.roomLeftInRow) {
-                System.out.println(a[0] + " " + a[1]);
-            }
+//            for (int[] a : seats.roomLeftInRow) {
+//                System.out.println(a[0] + " " + a[1]);
+//            }
 
         } catch (Exception e) {
             e.printStackTrace();
