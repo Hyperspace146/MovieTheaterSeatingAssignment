@@ -6,8 +6,8 @@
  */
 public class MovieTheaterSeats {
 
-    private int rows;           // The number of rows in the theater
-    private int cols;           // The number of columns in the theater
+    private final int rows;           // The number of rows in the theater
+    private final int cols;           // The number of columns in the theater
 
     // roomLeftInRow[i][0] indicates the amount of room left on the left side of the row
     // roomLeftInRow[i][1] indicates the amount of room left on the right side of the row

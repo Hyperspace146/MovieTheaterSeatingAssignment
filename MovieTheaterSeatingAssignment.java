@@ -11,11 +11,14 @@
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.util.Scanner;
 import java.io.FileReader;
+import java.util.regex.Pattern;
 
 public class MovieTheaterSeatingAssignment {
+
+    public static final int ROWS = 10;
+    public static final int COLS = 20;
 
     public static void main(String[] args) {
 
@@ -52,61 +55,35 @@ public class MovieTheaterSeatingAssignment {
          * Process the file's reservation requests line-by-line and write to a file the corresponding seat assignments:
          */
         int lineNumber = 0;
-        MovieTheaterSeats seats = new MovieTheaterSeats(10, 20);
+        MovieTheaterSeats seats = new MovieTheaterSeats(ROWS, COLS);
+        Pattern reservationFormat = Pattern.compile("R[0-9]{4} [0-9]+");
         try {
             while (input.hasNextLine()) {
                 String reservation = input.nextLine();
                 lineNumber += 1;
 
-                // Tokenize the current reservation request and make sure the format is valid
+                // Make sure each reservation request has the right format using regex
+                if (!reservationFormat.matcher(reservation).find()) {
+                    System.out.println("Incorrect seat reservation format on line " + lineNumber +
+                                    ". Make sure each line is of the form: R#### <number of seats requested>");
+                    input.close();
+                    output.close();
+                    return;
+                }
+
+                // Parse the reservation request into an ID and the number of seats requested
                 String[] tokens = reservation.trim().split(" ");
-                if (tokens.length != 2) {
-                    System.out.println("Incorrect number of arguments found in text file on line " + lineNumber + ". Make" +
-                            "sure the seat reservation request is of the form: R#### <number of seats requested>");
-                    input.close();
-                    output.close();
-                    return;
-                }
-
-                String resIDString = tokens[0];
-                String numSeatsRequestedString = tokens[1];
-                int resID;
-                int numSeatsRequested;
-
-                // Make sure the reservationID is of the format R####
-                if (resIDString.length() != 5 || resIDString.charAt(0) != 'R') {
-                    System.out.println("Incorrect reservation ID format. Make sure each line is of the " +
-                            "form: R#### <number of seats requested>");
-                    input.close();
-                    output.close();
-                    return;
-                }
-
-                // Parse the id and number of seats as integers
-                try {
-                    resID = Integer.parseInt(resIDString.substring(1));
-                    numSeatsRequested = Integer.parseInt(numSeatsRequestedString);
-                } catch (NumberFormatException e) {
-                    System.out.println("Incorrect seat reservation format. Make sure each line is of the " +
-                            "form: R#### <number of seats requested>");
-                    input.close();
-                    output.close();
-                    return;
-                }
-
+                String resID = tokens[0];
+                int numSeatsRequested = Integer.parseInt(tokens[1]);
 
                 // Compute the seat assignments based on our currently available seats
                 String reservedSeats = seats.reserveGroupSeats(numSeatsRequested);
                 if (reservedSeats == null) {
-                    System.out.println("Reservation with ID " + resIDString + " was unable to be fulfilled.");
+                    System.out.println("Reservation with ID " + resID + " on line " + lineNumber +
+                            " was unable to be fulfilled.");
                 }
 
-                try {
-                    output.write(resIDString + " " + reservedSeats + "\n");
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    return;
-                }
+                output.write(resID + " " + reservedSeats + "\n");
             }
 
             output.close();
@@ -116,9 +93,8 @@ public class MovieTheaterSeatingAssignment {
                 System.out.println(a[0] + " " + a[1]);
             }
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-            return;
         }
     }
 }
